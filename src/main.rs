@@ -31,7 +31,7 @@ async fn bestiario() {
         drop(text);
         
         let v = d.find(Name("div")).filter(|n| n.attr("id") == Some("guias")).collect::<Vec<_>>();
-        let guia = match v.first() {
+        let guide = match v.first() {
             None => {
                 println!("[ERROR] Guía no encontrada.");
                 return;
@@ -40,7 +40,7 @@ async fn bestiario() {
         };
     
         let mut content = String::new();
-        let titulo = match guia.children().skip_while(|n| !n.text().contains("Monstruos derrotados")).skip(1).next() {
+        let title = match guide.children().skip_while(|n| !n.text().contains("Monstruos derrotados")).skip(1).next() {
             None => {
                 println!("[ERROR] Título no encontrado.");
                 return;
@@ -48,14 +48,14 @@ async fn bestiario() {
             Some(t) => t.text()
         };
 
-        for c in guia.children() {
+        for c in guide.children() {
             if c.inner_html().contains("img") { continue; }
     
             content.push_str(&c.text());
             content.push('\n');
         }
 
-        let out = format!("out/p{:0>3}-{}.txt", i, titulo.replace(" ", "_"));
+        let out = format!("out/p{:0>3}-{}.txt", i, title.replace(" ", "_"));
 
         // Save file.
         match fs::write(
